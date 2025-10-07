@@ -125,4 +125,19 @@ public class PlayerMovement : MonoBehaviour
         playerRb.AddForce(jumpVector, ForceMode2D.Impulse);
     }
 
+    /// <summary>
+    /// Draws gizmos in the Unity Editor to visualize the ground check raycast.
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        if (playerFeet != null)
+        {
+            Gizmos.color = Color.yellow;
+            Vector3 start = playerFeet.transform.position;
+            Vector3 end = start + Vector3.down * 0.5f;
+
+            Gizmos.DrawLine(start, end);
+            Gizmos.DrawSphere(end, 0.05f);
+        }
+    }
 }
