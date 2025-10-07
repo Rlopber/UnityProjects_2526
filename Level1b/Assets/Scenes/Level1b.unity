@@ -165,6 +165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BallManager
   ballPrefab: {fileID: 351867884699514708, guid: 3dd13b13369f8e44b8111d8576d4b67d, type: 3}
   numberOfBalls: 1
+  minPosition: {x: 2, y: 0.5, z: 4}
+  maxPosition: {x: 2, y: 0.5, z: 6}
 --- !u!1 &677175092
 GameObject:
   m_ObjectHideFlags: 0

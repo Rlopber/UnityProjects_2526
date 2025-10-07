@@ -14,6 +14,13 @@ public class BallManager : MonoBehaviour
     [Tooltip("Maximum number of balls that can be instantiated using the space key.")]
     [SerializeField] private int numberOfBalls = 1;
 
+    [Header("Spawn Position")]
+    [SerializeField] private Vector3 minPosition;
+    [SerializeField] private Vector3 maxPosition;
+    private float minY = 0.5f;
+
+
+
     //private int ballCount = 0;
 
     private void Start()
@@ -50,6 +57,29 @@ public class BallManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Called automatically by Unity when values are changed in the Inspector.
+    /// Ensures that minPosition.y is never below minY and warns the user if corrected.
+    /// Also ensures maxPosition.y is not lower than minPosition.y.
+    /// </summary>
+    private void OnValidate()
+    {
+        // Force minPosition.y to be at least minY
+        if (minPosition.y < minY)
+        {
+            Debug.LogWarning($"[BallManager] minPosition.y ({minPosition.y}) is lower than {minY}. It will be automatically set to {minY}.");
+            minPosition.y = minY;
+        }
+
+        // Ensure maxPosition.y is not below minPosition.y
+        if (maxPosition.y < minPosition.y)
+        {
+            Debug.LogWarning($"[BallManager] maxPosition.y ({maxPosition.y}) is lower than minPosition.y ({minPosition.y}). It will be automatically set to {minPosition.y}.");
+            maxPosition.y = minPosition.y;
+        }
+    }
+
+
+    /// <summary>
     /// Instantiates a single ball at a random position within predefined bounds.
     /// </summary>
     private void NewSingleBall()
@@ -60,10 +90,16 @@ public class BallManager : MonoBehaviour
             return;
         }
 
+        //Vector3 randomPosition = new Vector3(
+        //    Random.Range(-5f, 5f),
+        //    Random.Range(0.5f, 5f),
+        //    Random.Range(-5f, 5f)
+        //);
+
         Vector3 randomPosition = new Vector3(
-            Random.Range(-5f, 5f),
-            Random.Range(0.5f, 5f),
-            Random.Range(-5f, 5f)
+            Random.Range(minPosition.x, maxPosition.x),
+            Random.Range(Mathf.Max(minPosition.y, minY), maxPosition.y),
+            Random.Range(minPosition.z, maxPosition.z)
         );
 
         // Instantiate the ball as a child of this container
