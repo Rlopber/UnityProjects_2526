@@ -34,9 +34,13 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
     // COMPONENTS
     private SpriteRenderer playerSprite;
     private Rigidbody2D playerRb;
+    private Animator animator;
 
     // GROUND CHECK LAYER
     private LayerMask groundLayer;
+
+    // Player was in ground the previous frame
+    private bool wasGrounded = true;
 
     private void Awake()
     {
@@ -45,6 +49,8 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>();
         groundLayer = LayerMask.GetMask("Ground");
         playerFeet = GameObject.Find("PlayerFeet");
+
+        animator = GetComponentInChildren<Animator>();
 
         playerControls = new InputSystem_Actions();
 
@@ -109,6 +115,9 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
     private void MovePlayer()
     {
         transform.position += Vector3.right * movementInput.x * moveSpeed * Time.deltaTime;
+
+        // De/active Animation
+        animator.SetFloat("Speed", Mathf.Abs(movementInput.x));
     }
 
     /// <summary>
@@ -139,7 +148,7 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Calculate the Vector3 for the jump
+    /// Calculates the Vector3 for the jump movement.
     /// </summary>
     private void CalculateJump()
     {
@@ -147,9 +156,27 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
             jumpVector = Vector3.up * jumpForce;
         else if (!IsGrounded())
             jumpVector = Vector3.zero;
+
+        HandleJumpAnimation();
     }
 
+    /// <summary>
+    /// Handles the jump animation state based on whether the player is grounded or in the air.
+    /// </summary>
+    private void HandleJumpAnimation()
+    {
+        bool grounded = IsGrounded();
 
+        // Player started jumping
+        if (jumpInput && grounded)
+            animator.SetBool("IsJumping", true);
+
+        // Player just landed
+        if (grounded && !wasGrounded)
+            animator.SetBool("IsJumping", false);
+
+        wasGrounded = grounded;
+    }
 
     /// <summary>
     /// Applies an instantaneous upward force to the player to perform a jump.
@@ -165,7 +192,7 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
 
 
     /// <summary>
-    /// Text
+    /// Updates the on-screen text to show whether the player is using a keyboard or a gamepad.
     /// </summary>
     void UpdateDeviceText()
     {

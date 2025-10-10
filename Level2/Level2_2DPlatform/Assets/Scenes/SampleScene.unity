@@ -611,8 +611,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfec536a8637204e83b1aaa0269c3c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementNewInputSystem
-  moveSpeed: 1
-  jumpForce: 2
+  moveSpeed: 5
+  jumpForce: 1.5
   inputDeviceText: {fileID: 83791492}
 --- !u!1 &1823754521
 GameObject:
