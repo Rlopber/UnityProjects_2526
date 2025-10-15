@@ -49,7 +49,15 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Initializes the enemy's internal components and movement settings based on its class.
+    /// </summary>
+    /// <remarks>
+    /// For <see cref="EnemyClass.Crab"/>, sets <c>groundDetection</c> to the second child and resets vertical direction.
+    /// For <see cref="EnemyClass.Octopus"/>, finds the topmost and bottommost child transforms for ground detection
+    /// and resets horizontal direction.
+    /// Logs a warning if the enemy class is not handled.
+    /// </remarks>
     private void InitializeEnemy()
     {
         Transform[] children = GetComponentsInChildren<Transform>();
@@ -60,30 +68,12 @@ public class EnemyController : MonoBehaviour
                 if (transform.childCount > 1)
                     groundDetection = transform.GetChild(1);
 
-                direction.y = 0f;
                 break;
 
             case EnemyClass.Octopus:
+                groundDetectionTop = transform.childCount > 1 ? transform.GetChild(1) : null;
+                groundDetectionBottom = transform.childCount > 2 ? transform.GetChild(2) : null;
 
-                groundDetectionTop = null;
-                groundDetectionBottom = null;
-
-                foreach (var child in children)
-                {
-                    if (child == this.transform) continue;
-
-                    if (groundDetectionTop == null || child.position.y > groundDetectionTop.position.y)
-                    {
-                        groundDetectionTop = child;
-                    }
-
-                    if (groundDetectionBottom == null || child.position.y < groundDetectionBottom.position.y)
-                    {
-                        groundDetectionBottom = child;
-                    }
-                }
-
-                direction.x = 0f;
                 break;
 
 
@@ -94,17 +84,20 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// Detects edges and obstacles using raycasting (ground collision).
+    /// Detects edges and obstacles in the 2D environment using a raycast.
+    /// Draws a debug ray for visualization.
     /// </summary>
-    /// <param name="rayLenght"></param>
-    /// <param name="direction"></param>
-    /// <param name="color"></param>
-    /// <returns></returns>
+    /// <param name="origin">The starting point of the ray.</param>
+    /// <param name="rayLenght">The length of the ray.</param>
+    /// <param name="direction">The direction in which the ray is cast.</param>
+    /// <param name="color">The color of the debug ray to visualize the raycast in the Scene view.</param>
+    /// <returns>True if the ray hits an object in the groundLayer; otherwise, false.</returns>
     private bool GeneralDetection(Vector3 origin, float rayLenght, Vector3 direction, Color color)
     {
         Debug.DrawRay(origin, direction * rayLenght, color);
         return Physics2D.Raycast(origin, direction, rayLenght, groundLayer);
     }
+
 
     /// <summary>
     /// Controls the crab movement and direction change upon reaching edges.
@@ -127,7 +120,7 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// Controls the crab movement and direction change upon reaching edges.
+    /// Controls the octopus movement and direction change upon reaching edges.
     /// </summary>
     private void OctopusMove()
     {
