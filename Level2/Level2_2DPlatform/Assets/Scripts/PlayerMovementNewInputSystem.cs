@@ -153,28 +153,20 @@ public class PlayerMovementNewInputSystem : MonoBehaviour
     private void CalculateJump()
     {
         if (jumpInput && IsGrounded())
+        {
             jumpVector = Vector3.up * jumpForce;
-        else if (!IsGrounded())
-            jumpVector = Vector3.zero;
-
-        HandleJumpAnimation();
-    }
-
-    /// <summary>
-    /// Handles the jump animation state based on whether the player is grounded or in the air.
-    /// </summary>
-    private void HandleJumpAnimation()
-    {
-        bool grounded = IsGrounded();
-
-        // Player started jumping
-        if (jumpInput && grounded)
             animator.SetBool("IsJumping", true);
+        }
+        else if (!IsGrounded())
+        {
+            jumpVector = Vector3.zero;
+        }
 
-        // Player just landed
+        bool grounded = IsGrounded();
         if (grounded && !wasGrounded)
+        {
             animator.SetBool("IsJumping", false);
-
+        }
         wasGrounded = grounded;
     }
 
