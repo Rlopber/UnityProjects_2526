@@ -43,7 +43,7 @@ Animator:
   m_GameObject: {fileID: 1073001503462243624}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 207e6c6ad0262e544b32d32d0787b2e1, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3176cad54f449a645add7cd34661ec1b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -206,6 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a468ce98a7ef05145a54f3fe92ad5fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  enemyClass: 0
   direction: {x: 1, y: 0}
   moveSpeed: 1
 --- !u!1 &6740548692528667122
