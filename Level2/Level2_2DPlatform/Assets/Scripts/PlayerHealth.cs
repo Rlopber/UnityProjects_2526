@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    // PROPERTIES
+    public int Health { get => health; set => health = value; }
+
     [Header("Player Health Settings")]
     [Range(0f, 10f)]
     [SerializeField] private int health = 5;
@@ -18,6 +21,7 @@ public class PlayerHealth : MonoBehaviour
     // COMPONENTS
     private SpriteRenderer spriteRenderer;
 
+
     private void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -27,8 +31,8 @@ public class PlayerHealth : MonoBehaviour
     {
         if (canTakeDamage)
         {
-            health--;
-            if (health <= 0)
+            Health--;
+            if (Health <= 0)
             {
                 // Handle player death (e.g., reload scene, show game over screen, etc.)
                 Debug.Log("Player Dead");
