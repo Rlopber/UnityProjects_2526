@@ -1,16 +1,16 @@
 using Unity.VisualScripting;
 using UnityEngine;
-public enum EnemyClass { Crab, Octopus }
+
+public enum EnemyClass { Crab, Octopus, Jumper }
 
 public class EnemyController : MonoBehaviour
 {
     // COMPONENTS
     private SpriteRenderer spriteRenderer;
+    private float sinCenterY;
 
     // DETECTORS
     private Transform groundDetection;
-    private Transform groundDetectionTop;
-    private Transform groundDetectionBottom;
 
     // Ground Check
     private LayerMask groundLayer;
@@ -22,66 +22,32 @@ public class EnemyController : MonoBehaviour
     [Range(0.5f, 2f)]
     [SerializeField] private float moveSpeed = 1f;
 
+    [ShowHeaderIf("Jumper Settings", "enemyClass", (int)EnemyClass.Jumper)]
+    [ShowIf("enemyClass", (int)EnemyClass.Jumper)]
+    [Range(0.5f, 3f)]
+    [SerializeField] private float sinFrequency = 2f;
+
+    [ShowIf("enemyClass", (int)EnemyClass.Jumper)]
+    [Range(0.5f, 3f)]
+    [SerializeField] private float sinAmplitude = 0.5f;
+
     private void Awake()
     {
+        groundDetection = transform.GetChild(1);
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         groundLayer = LayerMask.GetMask("Ground");
+    }
 
-        InitializeEnemy();
+    private void Start()
+    {
+        sinCenterY = transform.position.y;
     }
 
     private void Update()
     {
-
-        switch (enemyClass)
-        {
-            case EnemyClass.Crab:
-                CrabMove();
-                break;
-
-            case EnemyClass.Octopus:
-                OctopusMove();
-                break;
-
-            default:
-                Debug.LogWarning("Enemy class not handled in Update()");
-                break;
-        }
+        EnemyMove();
     }
 
-    /// <summary>
-    /// Initializes the enemy's internal components and movement settings based on its class.
-    /// </summary>
-    /// <remarks>
-    /// For <see cref="EnemyClass.Crab"/>, sets <c>groundDetection</c> to the second child and resets vertical direction.
-    /// For <see cref="EnemyClass.Octopus"/>, finds the topmost and bottommost child transforms for ground detection
-    /// and resets horizontal direction.
-    /// Logs a warning if the enemy class is not handled.
-    /// </remarks>
-    private void InitializeEnemy()
-    {
-        Transform[] children = GetComponentsInChildren<Transform>();
-
-        switch (enemyClass)
-        {
-            case EnemyClass.Crab:
-                if (transform.childCount > 1)
-                    groundDetection = transform.GetChild(1);
-
-                break;
-
-            case EnemyClass.Octopus:
-                groundDetectionTop = transform.childCount > 1 ? transform.GetChild(1) : null;
-                groundDetectionBottom = transform.childCount > 2 ? transform.GetChild(2) : null;
-
-                break;
-
-
-            default:
-                Debug.LogWarning("Enemy class not handled in InitializeEnemy()");
-                break;
-        }
-    }
 
     /// <summary>
     /// Detects edges and obstacles in the 2D environment using a raycast.
@@ -100,7 +66,31 @@ public class EnemyController : MonoBehaviour
 
 
     /// <summary>
-    /// Controls the crab movement and direction change upon reaching edges.
+    /// Controls the enemy movement according to the enemy class.
+    /// </summary>
+    private void EnemyMove()
+    {
+        switch (enemyClass)
+        {
+            case EnemyClass.Crab:
+                CrabMove();
+                break;
+
+            case EnemyClass.Octopus:
+                OctopusMove();
+                break;
+
+            case EnemyClass.Jumper:
+                JumperMove();
+                break;
+            default:
+                Debug.LogWarning("Enemy class not handled in Update()");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Controls the crab's movement and direction change upon reaching edges.
     /// </summary>
     private void CrabMove()
     {
@@ -120,17 +110,46 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// Controls the octopus movement and direction change upon reaching edges.
+    /// Controls the octopus's movement and direction change upon reaching edges.
     /// </summary>
     private void OctopusMove()
     {
-        if (groundDetectionTop == null || groundDetectionBottom == null) return;
+        if (groundDetection == null) return;
 
-        if (GeneralDetection(groundDetectionTop.position, 0.2f, Vector2.up, Color.red) || GeneralDetection(groundDetectionBottom.position, 0.2f, Vector2.down, Color.blue))
+        if (GeneralDetection(groundDetection.position, 1f, Vector2.up, Color.red) || GeneralDetection(groundDetection.position, 1f, Vector2.down, Color.blue))
         {
             direction = -direction;
         }
 
         transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
+    }
+
+    /// <summary>
+    /// Controls the jumper's movement using sine wave frequency and amplitude.
+    /// </summary>
+    private void JumperMove()
+    {
+
+        if (groundDetection == null)
+        {
+            Debug.LogError("GroundDetection is null!");
+            return;
+        }
+
+        if (GeneralDetection(groundDetection.position, 1f, direction, Color.red))
+        {
+            direction = -direction;
+        }
+
+        Vector3 enemyPosition = transform.position;
+
+        float sin = Mathf.Sin(enemyPosition.x * sinFrequency) * sinAmplitude;
+
+        Debug.Log($"Pos: {transform.position}, Dir: {direction}, sin: {sin}");
+
+        enemyPosition.y = sinCenterY + sin;
+        enemyPosition.x += direction.x * moveSpeed * Time.deltaTime;
+
+        transform.position = enemyPosition;
     }
 }
