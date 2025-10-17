@@ -145,11 +145,17 @@ public class EnemyController : MonoBehaviour
 
         float sin = Mathf.Sin(enemyPosition.x * sinFrequency) * sinAmplitude;
 
-        Debug.Log($"Pos: {transform.position}, Dir: {direction}, sin: {sin}");
-
         enemyPosition.y = sinCenterY + sin;
         enemyPosition.x += direction.x * moveSpeed * Time.deltaTime;
 
         transform.position = enemyPosition;
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+     if (collision.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerHealth>()?.TakeDamage();
+        }
     }
 }
