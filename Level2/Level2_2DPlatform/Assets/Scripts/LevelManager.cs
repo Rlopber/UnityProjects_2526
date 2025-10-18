@@ -2,15 +2,28 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private HUDController hudController;
+    private bool hasWon = false;
+
+    private void Awake()
     {
-        
+        hudController = GetComponentInChildren<HUDController>();
+
+        if (hudController == null)
+            Debug.LogError("HUDController not found in children!");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        CheckWin();
+    }
+
+    private void CheckWin()
+    {
+        if (!hasWon && hudController != null && hudController.PowerUpsRemaining == 0)
+        {
+            hasWon = true;
+            Debug.Log("YOU WIN THIS LEVEL!");
+        }
     }
 }
