@@ -9,25 +9,17 @@ public class HUDController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI powerUpsCountText;
 
-    // PROPERTIES
-
-    /// <summary>
-    /// Returns the number of active power-ups in the scene.
-    /// </summary>
-    public int PowerUpsRemaining => GameObject.FindGameObjectsWithTag("PowerUp").Length;
-
     private void Awake()
     {
 
         playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         UpdateHealth();
-        PowerUpCount();
+        SetPowerUpCount(0);
     }
 
     private void Update()
     {
         UpdateHealth();
-        PowerUpCount();
     }
 
 
@@ -43,9 +35,11 @@ public class HUDController : MonoBehaviour
 
     /// <summary>
     /// Updates the power-up counter on the HUD.
+    /// This method is called by the LevelManager when the count changes.
     /// </summary>
-    private void PowerUpCount()
+    public void SetPowerUpCount(int count)
     {
-        powerUpsCountText.text = PowerUpsRemaining.ToString("00");
+        if (powerUpsCountText != null)
+            powerUpsCountText.text = count.ToString("00");
     }
 }
