@@ -13,7 +13,7 @@ public class PlayerPoints : MonoBehaviour
     // VARIABLES
     private string powerUpTag = "PowerUp";
 
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag(powerUpTag))
@@ -28,6 +28,8 @@ public class PlayerPoints : MonoBehaviour
     /// </summary>
     private void RegisterPowerUpPoints()
     {
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayPowerUpSound();
         LevelManager.Instance.CurrentPlayerPowerUps++;
         LevelManager.Instance.PowerUpsRemaining--;
     }

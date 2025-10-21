@@ -32,6 +32,10 @@ public class PlayerHealth : MonoBehaviour
         if (canTakeDamage)
         {
             Health--;
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlayDamageSound();
+
             if (Health <= 0)
             {
                 LevelManager.Instance.GameOver();
