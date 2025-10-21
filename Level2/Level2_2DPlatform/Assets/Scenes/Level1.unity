@@ -477,7 +477,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PowerUp (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4069942055092617671, guid: 03991b6b44ba8f04a958dad1bd242733, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5818,7 +5819,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PowerUp (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4069942055092617671, guid: 03991b6b44ba8f04a958dad1bd242733, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -91860,6 +91862,7 @@ GameObject:
   - component: {fileID: 1383857943104227559}
   - component: {fileID: 954824800}
   - component: {fileID: 3453646718417308237}
+  - component: {fileID: 3453646718417308238}
   m_Layer: 0
   m_Name: 'Player '
   m_TagString: Player
@@ -92085,6 +92088,19 @@ MonoBehaviour:
   health: 5
   blinkDuration: 0.2
   blinkColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &3453646718417308238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305603840112293827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dcbbcaf8ab2e234682e9bdc2d8c8b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPoints
+  pointsPerPowerUp: 250
 --- !u!1 &3681004442520422657
 GameObject:
   m_ObjectHideFlags: 0
@@ -92205,7 +92221,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PowerUp
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4069942055092617671, guid: 03991b6b44ba8f04a958dad1bd242733, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
