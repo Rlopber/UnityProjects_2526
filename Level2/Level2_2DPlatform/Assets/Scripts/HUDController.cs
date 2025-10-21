@@ -14,12 +14,13 @@ public class HUDController : MonoBehaviour
 
         playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHealth>();
         UpdateHealth();
-        SetPowerUpCount(0);
+        UpdatePowerUps();
     }
 
     private void Update()
     {
         UpdateHealth();
+        UpdatePowerUps();
     }
 
 
@@ -34,12 +35,11 @@ public class HUDController : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the power-up counter on the HUD.
-    /// This method is called by the LevelManager when the count changes.
+    /// Updates the power-up counter on the HUD using LevelManager directly.
     /// </summary>
-    public void SetPowerUpCount(int count)
+    private void UpdatePowerUps()
     {
-        if (powerUpsCountText != null)
-            powerUpsCountText.text = count.ToString("00");
+        if (powerUpsCountText != null && LevelManager.Instance != null)
+            powerUpsCountText.text = LevelManager.Instance.PowerUpsRemaining.ToString("00");
     }
 }

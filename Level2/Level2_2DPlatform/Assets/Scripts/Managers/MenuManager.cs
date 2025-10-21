@@ -15,6 +15,6 @@ public class MenuManager : MonoBehaviour
     }
     public void QuitGame()
     {
-        // TODO implement quit game logic
+        Application.Quit();
     }
 }

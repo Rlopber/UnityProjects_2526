@@ -11,8 +11,12 @@ public class PowerUpController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Increases the player's power-up count and removes the collected power-up from the game.
+    /// </summary>
     private void CollectPowerUp()
     {
+        LevelManager.Instance.CurrentPlayerPowerUps++;
         Destroy(gameObject);
     }
 }

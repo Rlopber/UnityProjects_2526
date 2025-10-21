@@ -28,8 +28,7 @@ public class PlayerPoints : MonoBehaviour
     /// </summary>
     private void RegisterPowerUpPoints()
     {
-        // TODO play power-up sound effect
-
-        // TODO manage poinst system GameManager, LevelManager
+        LevelManager.Instance.CurrentPlayerPowerUps++;
+        LevelManager.Instance.PowerUpsRemaining--;
     }
 }

@@ -9,9 +9,8 @@ public class LevelManager : MonoBehaviour
     // UI PANELS
     [Header("Panels")]
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject winLevelPanel;
 
-    // COMPONENT
-    private HUDController hudController;
 
     // VARIABLES
 
@@ -48,12 +47,12 @@ public class LevelManager : MonoBehaviour
     {
         Instance = this;
 
-        // Disable Gameover Panel at start and set time scale to normal
+        // Disable panels at start and set time scale to normal
         gameOverPanel.SetActive(false);
+        winLevelPanel.SetActive(false);
+
         Time.timeScale = 1f;
 
-
-        hudController = GetComponentInChildren<HUDController>();
     }
 
     private void Start()
@@ -73,7 +72,6 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private void UpdatePowerUpCount()
     {
-        // TODO timeout to game over
         powerUpsRemaining = totalLevelPowerUps - currentPlayerPowerUps;
     }
 
@@ -84,8 +82,7 @@ public class LevelManager : MonoBehaviour
     {
         if (currentPlayerPowerUps >= totalLevelPowerUps)
         {
-            // TODO implement win logic
-            Debug.Log("YOU WIN THIS LEVEL!");
+            ShowPanelAndPause(winLevelPanel);
         }
     }
 
@@ -94,10 +91,15 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
-        // Show Game Over Panel and pause the game
-        gameOverPanel.SetActive(true);
+        ShowPanelAndPause(gameOverPanel);
+    }
 
-        // Pause the game
+    /// <summary>
+    /// Shows a panel and pauses the game.
+    /// </summary>
+    private void ShowPanelAndPause(GameObject panel)
+    {
+        panel.SetActive(true);
         Time.timeScale = 0f;
     }
 
@@ -117,5 +119,17 @@ public class LevelManager : MonoBehaviour
     {
         // Reload the current active scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+
+    /// <summary>
+    /// Sends the player to the next level.
+    /// </summary>
+    public void NextLevel()
+    {
+        int levelIndex = SceneManager.sceneCountInBuildSettings;
+
+        if (SceneManager.GetActiveScene().buildIndex < levelIndex - 1)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
